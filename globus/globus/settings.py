@@ -25,7 +25,9 @@ SECRET_KEY = '_)3!%egy)30jm3i#)!s8k$f#vuw!bjeix39+njsm)q3)dv@gt3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'http://mukunidev.pythonanywhere.com/',
+]
 
 
 # Application definition
