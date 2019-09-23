@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .serializers import JobSerializer, DriverSerializer
-from .models import Job, Driver
+from rest_framework.response import Response
+from .serializers import JobSerializer, DriverSerializer, LoadSerializer
+from .models import Job, Driver, Load
 
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 
 class ListView(generics.ListAPIView):
     """This class handles the http GET (all) reuests."""
@@ -43,7 +44,30 @@ class DriverDetailsView(MultipleFieldLookupMixin, generics.RetrieveAPIView):
     serializer_class = DriverSerializer
     lookup_fields = ['contact_number', 'short_nrc'] 
 
-class DriverJobsListView(MultipleFieldLookupMixin, generics.ListAPIView):
-    queryset = Job.objects.filter()
+class DriverJobsListView(generics.ListAPIView):
+    queryset = Job.objects.all()
     serializer_class = JobSerializer
     lookup_fields = ['driver_id']
+
+    def list(self, request, driver_id):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(driver_id=driver_id)
+        serializer = JobSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class LoadListView(generics.ListAPIView):
+    queryset = Load.objects.all()
+    serializer_class = LoadSerializer
+    lookup_fields = ['job_id']
+
+    def list(self, request, job_id):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(job_id=job_id)
+        serializer = LoadSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class LoadDetailsView(generics.RetrieveUpdateAPIView):
+    """This class handles the http GET and PUT requests."""
+
+    queryset = Load.objects.all()
+    serializer_class = LoadSerializer

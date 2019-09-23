@@ -21,6 +21,31 @@ class Load(models.Model):
   staged = models.BooleanField(default=False)
   job_id = models.ForeignKey('Job', models.SET_NULL, db_column='job_id', blank=True, null=True)
 
+  PENDING = 'PE'
+  STARTED = 'ST'
+  AT_PICKUP = 'AP'
+  LOADING = 'LO'
+  LOADED = 'CLO'
+  IN_TRANSIT = 'IT'
+  AT_DESTINATION = 'AD'
+  OFFLOADING = 'OF'
+  OFFLOADED = 'COF'
+  COMPLETED = 'CO'
+
+  JOB_STATUS_CHOICES = [
+    (PENDING, 'Pending'),
+    (STARTED, 'Started'),
+    (AT_PICKUP, 'At Pickup'),
+    (LOADING, 'Loading'),
+    (LOADED, 'Loaded'),
+    (IN_TRANSIT, 'In Transit'),
+    (AT_DESTINATION, 'At Destination'),
+    (OFFLOADING, 'Offloading'),
+    (OFFLOADED, 'Offloaded'),
+    (COMPLETED, 'Completed'),
+  ]
+
+  job_status = models.CharField(max_length=100, choices=JOB_STATUS_CHOICES, default=PENDING)
   def __str__(self):
     return self.item + ' | ' + str(self.verified)
 
